@@ -3,7 +3,7 @@
 {% block body -%}
     <h1>Idea list</h1>
 
-    <table class="records_list">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
@@ -37,25 +37,34 @@
                 <td>{{ entity.author }}</td>
                 <td>{{ entity.user }}</td>
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('idea_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('idea_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                    <div class="item-actions">
+                        <a href="{{ path('idea_show', { 'id': entity.id }) }}" class="btn btn-sm btn-default">
+                            {#{{ 'action.show'|trans }}#}
+                            {{ 'Show Idea'|trans }}
+                        </a>
+
+                        {#{% if post.isAuthor(app.user) %}#}
+                            <a href="{{ path('idea_edit', { 'id': entity.id }) }}" class="btn btn-sm btn-primary">
+                                {#<i class="fa fa-edit"></i> {{ 'action.edit'|trans }}#}
+                                <i class="fa fa-edit"></i> {{ 'Edit Idea'|trans }}
+                            </a>
+                        {#{% endif %}#}
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('idea_new') }}">
-                Create a new entry
-            </a>
-        </li>
+    <div class="section actions">
+        <a href="{{ path('idea_new') }}" class="btn btn-lg btn-block btn-success">
+            <i class="fa fa-plus"></i> {{ 'Create Idea'|trans }}
+        </a>
+    </div>
+        {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path('idea_new') }}">#}
+                {#Create a new entry#}
+            {#</a>#}
+        {#</li>#}
     </ul>
     {% endblock %}

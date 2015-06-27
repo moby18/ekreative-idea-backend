@@ -25,3 +25,4 @@ parameters:
     aws_ios_arn: ~
     aws_iosdev_arn: ~
     aws_android_arn: ~
+    locale: ~

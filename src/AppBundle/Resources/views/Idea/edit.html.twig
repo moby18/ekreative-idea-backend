@@ -7,12 +7,13 @@
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('idea') }}">
-            Back to the list
+    <div class="item-actions">
+        <a href="{{ path('idea') }}" class="btn btn-sm btn-default">
+            {#{{ 'action.show'|trans }}#}
+            {{ 'Back to the list'|trans }}
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+
+    </div>
+    {{ form(delete_form) }}
+
 {% endblock %}

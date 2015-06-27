@@ -30,7 +30,7 @@
             <div class="container">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ path('homepage') }}">
-                        Light the Bulb!
+                        <img src="{{ asset('uploads/images/logo.jpg') }}" width="60" height="60" style="float: left; margin-top: -20px">Light the Bulb!
                     </a>
 
                     <button type="button" class="navbar-toggle"
@@ -47,7 +47,7 @@
                         {% block header_navigation_links %}
                             <li>
                                 <a href="{{ path('idea') }}">
-                                    <i class="fa fa-home"></i> Homepage
+                                    <i class="fa fa-lightbulb-o"></i> Ideas list
                                 </a>
                             </li>
 

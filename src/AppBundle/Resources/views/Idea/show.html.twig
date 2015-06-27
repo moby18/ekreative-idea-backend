@@ -3,7 +3,7 @@
 {% block body -%}
     <h1>Idea</h1>
 
-    <table class="record_properties">
+    <table class="table">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -56,17 +56,18 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('idea') }}">
-            Back to the list
+    <div class="item-actions">
+        <a href="{{ path('idea') }}" class="btn btn-sm btn-default">
+            {#{{ 'action.show'|trans }}#}
+            {{ 'Back to the list'|trans }}
         </a>
-    </li>
-    <li>
-        <a href="{{ path('idea_edit', { 'id': entity.id }) }}">
-            Edit
+
+        {#{% if post.isAuthor(app.user) %}#}
+        <a href="{{ path('idea_edit', { 'id': entity.id }) }}" class="btn btn-sm btn-primary">
+            {#<i class="fa fa-edit"></i> {{ 'action.edit'|trans }}#}
+            <i class="fa fa-edit"></i> {{ 'Edit Idea'|trans }}
         </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+        {#{% endif %}#}
+    </div>
+    {{ form(delete_form) }}
 {% endblock %}
