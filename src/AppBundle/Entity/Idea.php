@@ -585,7 +585,8 @@ class Idea implements \JsonSerializable
             'dislikes' => ($this->getDislikes() ? $this->getDislikes() : 0),
             'author' => $this->getAuthor(),
             'created' => $this->getCreated()->getTimestamp(),
-            'updated' => $this->getUpdated()->getTimestamp()
+            'updated' => $this->getUpdated()->getTimestamp(),
+            'user_avatar' => 'http://idea.andrey.ekreative.com/uploads/avatars/ekreative.jpg'
         ];
     }
 }

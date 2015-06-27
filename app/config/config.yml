@@ -132,3 +132,14 @@ liip_imagine:
             quality: 100
             filters:
                 relative_resize: { widen: 320 }
+
+
+mcfedr_aws_push:
+    platforms:
+        ios: '%aws_ios_arn%'
+        ios_dev: '%aws_iosdev_arn%'
+        android: '%aws_android_arn%'
+    aws:
+        key: '%aws_key%'
+        secret: '%aws_secret%'
+        region: '%aws_region%'

@@ -156,7 +156,8 @@ class Comment implements \JsonSerializable
             'id' => $this->getId(),
             'text' => $this->getText(),
             'author' => $this->getAuthor(),
-            'idea_id' => $this->getIdea()->getId()
+            'idea_id' => $this->getIdea()->getId(),
+            'user_avatar' => 'http://idea.andrey.ekreative.com/uploads/avatars/comments.jpg'
         ];
     }
 }
