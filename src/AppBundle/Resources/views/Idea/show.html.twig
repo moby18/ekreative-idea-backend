@@ -1,0 +1,74 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block body -%}
+    <h1>Idea</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ entity.description }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ entity.price }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ entity.category }}</td>
+            </tr>
+            <tr>
+                <th>Comments</th>
+                <td>{{ entity.comments }}</td>
+            </tr>
+            <tr>
+                <th>Likes</th>
+                <td>{{ entity.likes }}</td>
+            </tr>
+            <tr>
+                <th>Dislikes</th>
+                <td>{{ entity.dislikes }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ entity.status }}</td>
+            </tr>
+            <tr>
+                <th>Video</th>
+                <td>{{ entity.video }}</td>
+            </tr>
+            <tr>
+                <th>Audio</th>
+                <td>{{ entity.audio }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ entity.author }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>{{ entity.user }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('idea') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('idea_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
