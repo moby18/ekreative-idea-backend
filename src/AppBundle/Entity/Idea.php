@@ -78,7 +78,7 @@ class Idea implements \JsonSerializable
     /**
      * @var integer
      *
-     * @ORM\Column(name="image", type="string", length=255)
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
 
@@ -581,11 +581,11 @@ class Idea implements \JsonSerializable
             'image' => $this->getImage(),
             'description' => $this->getDescription(),
             'price' => $this->getPrice(),
-            'likes' => $this->getLikes(),
-            'dislikes' => $this->getDislikes(),
+            'likes' => ($this->getLikes() ? $this->getLikes() : 0),
+            'dislikes' => ($this->getDislikes() ? $this->getDislikes() : 0),
             'author' => $this->getAuthor(),
-            'created' => $this->getCreated(),
-            'updated' => $this->getUpdated()
+            'created' => $this->getCreated()->getTimestamp(),
+            'updated' => $this->getUpdated()->getTimestamp()
         ];
     }
 }

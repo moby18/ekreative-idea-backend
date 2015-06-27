@@ -25,9 +25,9 @@ class APIController extends JsonController
      */
     public function loginAction()
     {
-        return array(
-                // ...
-            );    }
+        return array(// ...
+        );
+    }
 
     /**
      * @Route("/logout")
@@ -35,9 +35,9 @@ class APIController extends JsonController
      */
     public function logoutAction()
     {
-        return array(
-                // ...
-            );    }
+        return array(// ...
+        );
+    }
 
     /**
      * @Route("/register")
@@ -45,9 +45,9 @@ class APIController extends JsonController
      */
     public function registerAction()
     {
-        return array(
-                // ...
-            );    }
+        return array(// ...
+        );
+    }
 
     /**
      * @Route("/api/idea/list")
@@ -123,6 +123,20 @@ class APIController extends JsonController
         $em = $this->getDoctrine()->getManager();
         $em->persist($idea);
         $em->flush();
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('admin@ekreative.com')
+            ->setTo($this->container->getParameter('admin_email'))
+            ->setBody(
+                $this->renderView(
+                    '@App/Emails/email.html.twig',
+                    array('name' => 'VAsya')
+                ),
+                'text/html'
+            );
+        $this->get('mailer')->send($message);
+
         return JsonResponse::create($idea, Response::HTTP_OK);
     }
 
@@ -193,7 +207,7 @@ class APIController extends JsonController
      */
     public function addIdeaLikeAction(Idea $idea)
     {
-        $idea->setLikes($idea->getLikes()+1);
+        $idea->setLikes($idea->getLikes() + 1);
         $em = $this->getDoctrine()->getManager();
         $em->flush();
         return JsonResponse::create($idea, Response::HTTP_OK);
@@ -215,7 +229,7 @@ class APIController extends JsonController
      */
     public function addIdeaDislikeAction(Idea $idea)
     {
-        $idea->setDislikes($idea->getDislikes()+1);
+        $idea->setDislikes($idea->getDislikes() + 1);
         $em = $this->getDoctrine()->getManager();
         $em->flush();
         return JsonResponse::create($idea, Response::HTTP_OK);
