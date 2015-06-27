@@ -583,6 +583,7 @@ class Idea implements \JsonSerializable
             'price' => $this->getPrice(),
             'likes' => ($this->getLikes() ? $this->getLikes() : 0),
             'dislikes' => ($this->getDislikes() ? $this->getDislikes() : 0),
+            'comments_count' => count($this->getComments()),
             'author' => $this->getAuthor(),
             'created' => $this->getCreated()->getTimestamp(),
             'updated' => $this->getUpdated()->getTimestamp(),

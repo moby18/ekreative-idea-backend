@@ -131,7 +131,7 @@ liip_imagine:
         idea_item:
             quality: 100
             filters:
-                relative_resize: { widen: 320 }
+                relative_resize: { widen: 640 }
 
 
 mcfedr_aws_push:

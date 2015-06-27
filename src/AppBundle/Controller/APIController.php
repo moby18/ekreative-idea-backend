@@ -68,9 +68,36 @@ class APIController extends JsonController
         $items = $em->getRepository('AppBundle:Idea')->findAll();
         foreach ($items as &$item) {
             $image = $item->getImage();
-            $item->setImage(!empty($image) ? $this->container->get('liip_imagine.cache.manager')->getBrowserPath($item->getWebPath(), 'idea_item') : null);
+            $item->setImage(!empty($image) ? $this->container->get('liip_imagine.cache.manager')->getBrowserPath($item->getWebPath(), 'idea_item') :
+                $this->container->get('liip_imagine.cache.manager')->getBrowserPath('uploads/images/default.jpg', 'idea_item'));
         }
         return JsonResponse::create($items, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/api/idea/list/2")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get Ideas list",
+     *  statusCodes={
+     *      200="Returned Ideas list"
+     *  }
+     * )
+     * @Method("GET")
+     * @return JsonResponse
+     */
+    public function getIdeaList2Action()
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $items = $em->getRepository('AppBundle:Idea')->findAll();
+        foreach ($items as &$item) {
+            $image = $item->getImage();
+            $item->setImage(!empty($image) ? $this->container->get('liip_imagine.cache.manager')->getBrowserPath($item->getWebPath(), 'idea_item') : $this->container->get('liip_imagine.cache.manager')->getBrowserPath('uploads/images/default.jpg', 'idea_item'));
+        }
+        $a = new \stdClass();
+        $a->items = $items;
+        return JsonResponse::create($a, Response::HTTP_OK);
     }
 
     /**
@@ -90,7 +117,7 @@ class APIController extends JsonController
     public function getIdeaItemAction(Idea $idea)
     {
         $image = $idea->getImage();
-        $idea->setImage(!empty($image) ? $this->container->get('liip_imagine.cache.manager')->getBrowserPath($idea->getWebPath(), 'idea_item') : null);
+        $idea->setImage(!empty($image) ? $this->container->get('liip_imagine.cache.manager')->getBrowserPath($idea->getWebPath(), 'idea_item') : $this->container->get('liip_imagine.cache.manager')->getBrowserPath('uploads/images/default.jpg', 'idea_item'));
         return JsonResponse::create($idea, Response::HTTP_OK);
     }
 
@@ -125,13 +152,13 @@ class APIController extends JsonController
         $em->flush();
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('Hello Email')
+            ->setSubject('new idea has been submitted')
             ->setFrom('admin@ekreative.com')
             ->setTo($this->container->getParameter('admin_email'))
             ->setBody(
                 $this->renderView(
                     '@App/Emails/email.html.twig',
-                    array('name' => 'VAsya')
+                    array('name' => 'Friend')
                 ),
                 'text/html'
             );
