@@ -135,23 +135,47 @@ class APIController extends JsonController
             );    }
 
     /**
-     * @Route("/ideaLike")
-     * @Template()
+     * @ApiDoc(
+     *  resource=true,
+     *  description="add Idea like",
+     *  statusCodes={
+     *      200="Returned when Idea was liked",
+     *  }
+     * )
+     * @Route("/api/idea/{id}/like")
+     * @ParamConverter("idea", class="AppBundle:Idea")
+     * @Method("POST")
+     * @param Idea $idea
+     * @return JsonResponse
      */
-    public function ideaLikeAction()
+    public function addIdeaLikeAction(Idea $idea)
     {
-        return array(
-                // ...
-            );    }
+        $idea->setLikes($idea->getLikes()+1);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+        return JsonResponse::create($idea, Response::HTTP_OK);
+    }
 
     /**
-     * @Route("/ideaDislike")
-     * @Template()
+     * @ApiDoc(
+     *  resource=true,
+     *  description="add Idea dislike",
+     *  statusCodes={
+     *      200="Returned when Idea was disliked",
+     *  }
+     * )
+     * @Route("/api/idea/{id}/dislike")
+     * @ParamConverter("idea", class="AppBundle:Idea")
+     * @Method("POST")
+     * @param Idea $idea
+     * @return JsonResponse
      */
-    public function ideaDislikeAction()
+    public function addIdeaDislikeAction(Idea $idea)
     {
-        return array(
-                // ...
-            );    }
+        $idea->setDislikes($idea->getDislikes()+1);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+        return JsonResponse::create($idea, Response::HTTP_OK);
+    }
 
 }

@@ -195,10 +195,6 @@ class Idea implements \JsonSerializable
      */
     public function preUpload()
     {
-//        if (null !== $this->getFile()) {
-//            $date = new \DateTime();
-//            $this->image = $date->getTimestamp().uniqid().'.'.$this->getFile()->guessExtension();
-//        }
     }
     /**
      * @ORM\PostPersist()
