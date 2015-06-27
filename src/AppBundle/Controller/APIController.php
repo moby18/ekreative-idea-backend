@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Comment;
 use AppBundle\Entity\Idea;
+use AppBundle\Form\CommentType;
 use AppBundle\Form\IdeaType;
 use Doctrine\ORM\EntityManager;
 use Mcfedr\JsonFormBundle\Controller\JsonController;
@@ -125,14 +127,55 @@ class APIController extends JsonController
     }
 
     /**
-     * @Route("/ideaCommentList")
-     * @Template()
+     * @Route("/api/idea/{id}/comment/list")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get Idea Comments list",
+     *  statusCodes={
+     *      200="Returned Ideas Comments list"
+     *  }
+     * )
+     * @ParamConverter("idea", class="AppBundle:Idea")
+     * @Method("GET")
+     * @param Idea $idea
+     * @return JsonResponse
      */
-    public function ideaCommentListAction()
+    public function getIdeaCommentListAction(Idea $idea)
     {
-        return array(
-                // ...
-            );    }
+        // TODO why it doesnt work
+//        $items = $idea->getComments();
+        $em = $this->getDoctrine()->getManager();
+        $items = $em->getRepository('AppBundle:Comment')->findBy(['idea' => $idea->getId()]);
+        return JsonResponse::create($items, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/api/idea/{id}/comment/add")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Add Idea Comment",
+     *  statusCodes={
+     *      200="Returned when Comment was added"
+     *  }
+     * )
+     * @ParamConverter("idea", class="AppBundle:Idea")
+     * @Method("POST")
+     * @param Request $request
+     * @param Idea $idea
+     * @return JsonResponse
+     */
+    public function addIdeaCommentListAction(Request $request, Idea $idea)
+    {
+        $comment = new Comment();
+        $form = $this->createForm(new CommentType(), $comment);
+        $this->handleJsonForm($form, $request);
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($comment);
+//        $idea->addComment($comment);
+        $em->flush();
+        return JsonResponse::create($comment, Response::HTTP_OK);
+    }
 
     /**
      * @ApiDoc(

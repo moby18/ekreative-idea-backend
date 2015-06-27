@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
@@ -48,10 +50,8 @@ class Idea implements \JsonSerializable
     private $category;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="comments", type="string", length=255, nullable=true)
-     */
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="idea")
+     **/
     private $comments;
 
     /**
@@ -121,11 +121,15 @@ class Idea implements \JsonSerializable
      */
     private $updated;
 
-
     /**
      * @Assert\File(maxSize="6000000")
      */
     private $file;
+
+    function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Get file.
@@ -318,14 +322,28 @@ class Idea implements \JsonSerializable
     }
 
     /**
-     * Set comments
+     * Add comment
      *
-     * @param string $comments
+     * @param Comment $comment
      * @return Idea
      */
-    public function setComments($comments)
+    public function addComment($comment)
     {
-        $this->comments = $comments;
+        $this->comments->add($comment);
+        $comment->setIdea($this->getId());
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param Comment $comment
+     * @return Idea
+     */
+    public function removeComment($comment)
+    {
+        $this->comments->removeElement($comment);
 
         return $this;
     }
@@ -333,7 +351,7 @@ class Idea implements \JsonSerializable
     /**
      * Get comments
      *
-     * @return string 
+     * @return Collection
      */
     public function getComments()
     {
