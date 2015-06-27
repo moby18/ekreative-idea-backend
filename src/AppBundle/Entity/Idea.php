@@ -3,14 +3,18 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Idea
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class Idea
+class Idea implements \JsonSerializable
 {
     /**
      * @var integer
@@ -45,21 +49,21 @@ class Idea
     /**
      * @var string
      *
-     * @ORM\Column(name="comments", type="string", length=255)
+     * @ORM\Column(name="comments", type="string", length=255, nullable=true)
      */
     private $comments;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="likes", type="integer")
+     * @ORM\Column(name="likes", type="integer", nullable=true)
      */
     private $likes;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="dislikes", type="integer")
+     * @ORM\Column(name="dislikes", type="integer", nullable=true)
      */
     private $dislikes;
 
@@ -71,16 +75,23 @@ class Idea
     private $status;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="image", type="string", length=255)
+     */
+    private $image;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="video", type="string", length=255)
+     * @ORM\Column(name="video", type="string", length=255, nullable=true)
      */
     private $video;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="audio", type="string", length=255)
+     * @ORM\Column(name="audio", type="string", length=255, nullable=true)
      */
     private $audio;
 
@@ -94,10 +105,129 @@ class Idea
     /**
      * @var string
      *
-     * @ORM\Column(name="user", type="string", length=255)
+     * @ORM\Column(name="user", type="string", length=255, nullable=true)
      */
     private $user;
 
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    private $file;
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('file', new Assert\File(array(
+            'maxSize' => 6000000,
+        )));
+    }
+    public function getAbsolutePath()
+    {
+        return null === $this->image
+            ? null
+            : $this->getUploadRootDir().'/'.$this->image;
+    }
+    public function getWebPath()
+    {
+        return null === $this->image
+            ? null
+            : $this->getUploadDir().'/'.$this->image;
+    }
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded
+        // documents should be saved
+        return __DIR__.'/../../../web/'.$this->getUploadDir();
+    }
+    protected function getUploadDir()
+    {
+        // get rid of the __DIR__ so it doesn't screw up
+        // when displaying uploaded doc/image in the view.
+        return 'uploads/ideas';
+    }
+
+    private $temp;
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+        // check if we have an old image path
+        if (is_file($this->getAbsolutePath())) {
+            // store the old name to delete after the update
+            $this->temp = $this->getAbsolutePath();
+        } else {
+            $this->image = 'initial';
+        }
+        if (null !== $this->getFile()) {
+            $date = new \DateTime();
+            $this->image = $date->getTimestamp() . uniqid() . '.' . $this->getFile()->guessExtension();
+        }
+    }
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+//        if (null !== $this->getFile()) {
+//            $date = new \DateTime();
+//            $this->image = $date->getTimestamp().uniqid().'.'.$this->getFile()->guessExtension();
+//        }
+    }
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+        // check if we have an old image
+        if (isset($this->temp)) {
+            // delete the old image
+            unlink($this->temp);
+            // clear the temp image path
+            $this->temp = null;
+        }
+        // you must throw an exception here if the file cannot be moved
+        // so that the entity is not persisted to the database
+        // which the UploadedFile move() method does
+        $this->getFile()->move(
+            $this->getUploadRootDir(),
+            $this->image
+        );
+        $this->setFile(null);
+    }
+    /**
+     * @ORM\PreRemove()
+     */
+    public function storeFilenameForRemove()
+    {
+        $this->temp = $this->getAbsolutePath();
+    }
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if (isset($this->temp)) {
+            unlink($this->temp);
+        }
+    }
 
     /**
      * Get id
@@ -271,6 +401,22 @@ class Idea
     }
 
     /**
+     * @return int
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param int $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
      * Set video
      *
      * @param string $video
@@ -360,5 +506,25 @@ class Idea
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'image' => $this->getImage(),
+            'description' => $this->getDescription(),
+            'price' => $this->getPrice(),
+            'likes' => $this->getLikes(),
+            'dislikes' => $this->getDislikes(),
+            'author' => $this->getAuthor()
+        ];
     }
 }

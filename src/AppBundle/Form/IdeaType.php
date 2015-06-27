@@ -15,17 +15,40 @@ class IdeaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description')
-            ->add('price')
-            ->add('category')
-            ->add('comments')
-            ->add('likes')
-            ->add('dislikes')
-            ->add('status')
-            ->add('video')
-            ->add('audio')
-            ->add('author')
-            ->add('user')
+            ->add('description',null,[
+                'required' => true
+            ])
+            ->add('price',null,[
+                'required' => false
+            ])
+            ->add('category',null,[
+                'required' => false
+            ])
+//            ->add('comments',null,[
+//                'required' => false
+//            ])
+//            ->add('likes',null,[
+//                'required' => false
+//            ])
+//            ->add('dislikes',null,[
+//                'required' => false
+//            ])
+            ->add('status',null,[
+                'required' => false
+            ])
+//            ->add('video',null,[
+//                'required' => false
+//            ])
+//            ->add('audio',null,[
+//                'required' => false
+//            ])
+            ->add('author',null,[
+                'required' => true
+            ])
+//            ->add('user',null,[
+//                'required' => false
+//            ])
+            ->add('file')
         ;
     }
     

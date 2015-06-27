@@ -124,23 +124,11 @@ liip_imagine:
           web_path: ~
     filter_sets:
         cache: ~
-        app_module_list:
+#        app_module_list:
+#            quality: 100
+#            filters:
+#                thumbnail: { size: [270, 240], mode: outbound }
+        idea_item:
             quality: 100
             filters:
-                thumbnail: { size: [270, 240], mode: outbound }
-        app_module_one:
-            quality: 100
-            filters:
-                thumbnail: { size: [1242, 670], mode: outbound }
-        app_test:
-            quality: 100
-            filters:
-                relative_resize: { widen: 1242 }
-        app_sponsor:
-            quality: 100
-            filters:
-                thumbnail: { size: [108, 108], mode: outbound }
-        app_welcome_screen:
-            quality: 100
-            filters:
-                thumbnail: { size: [1242, 2208], mode: outbound }
+                relative_resize: { widen: 320 }
