@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Idea
@@ -108,6 +109,18 @@ class Idea implements \JsonSerializable
      * @ORM\Column(name="user", type="string", length=255, nullable=true)
      */
     private $user;
+
+    /**
+     * @Gedmo\Timestampable(on="create")
+     * @Doctrine\ORM\Mapping\Column(type="datetime")
+     */
+    private $created;
+    /**
+     * @Gedmo\Timestampable(on="update")
+     * @Doctrine\ORM\Mapping\Column(type="datetime")
+     */
+    private $updated;
+
 
     /**
      * @Assert\File(maxSize="6000000")
@@ -509,6 +522,38 @@ class Idea implements \JsonSerializable
     }
 
     /**
+     * @return mixed
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param mixed $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param mixed $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /**
      * (PHP 5 &gt;= 5.4.0)<br/>
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
@@ -524,7 +569,9 @@ class Idea implements \JsonSerializable
             'price' => $this->getPrice(),
             'likes' => $this->getLikes(),
             'dislikes' => $this->getDislikes(),
-            'author' => $this->getAuthor()
+            'author' => $this->getAuthor(),
+            'created' => $this->getCreated(),
+            'updated' => $this->getUpdated()
         ];
     }
 }
